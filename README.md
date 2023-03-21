@@ -1,8 +1,9 @@
-# Android device tree for samsung SM-T220 (gta7litewifi)
+# Android device tree for samsung SM-T225 (gta7lite)
 
 ```
 #
-# Copyright (C) 2023 The LineageOS Project
+# Copyright (C) 2023 The Android Open Source Project
+# Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
 #
 # SPDX-License-Identifier: Apache-2.0
 #

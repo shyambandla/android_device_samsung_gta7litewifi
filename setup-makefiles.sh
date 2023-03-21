@@ -8,7 +8,7 @@
 
 set -e
 
-DEVICE=gta7litewifi
+DEVICE=gta7lite
 VENDOR=samsung
 
 # Load extract_utils and do some sanity checks

@@ -1,0 +1,63 @@
+on init
+    setprop sys.usb.configfs 1
+    setprop sys.usb.ffs.aio_compat 1
+
+on boot
+    start health-hal-2-1
+    setprop sys.usb.config adb
+
+on fs
+    write /sys/class/udc/musb-hdrc/device/cmode 2
+    wait /dev/block/platform/soc/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+    install_keyring
+
+on post-fs
+    mkdir /mnt/vendor/efs/DAK 0775 root root
+    restorecon -R /mnt/vendor/efs/DAK
+    chown root root /mnt/vendor/efs/DAK/gakkeybox
+    chmod 0644 /mnt/vendor/efs/DAK/gakkeybox
+    start boot-hal-1-1
+
+on post-fs-data
+    mkdir /data/vendor/keymaster 0775 root root
+    mkdir /data/vendor/gatekeeper 0770 root root
+
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    install_keyring
+    setprop crypto.ready 1
+
+on property:sys.listeners.registered=true && property:vendor.sys.listeners.registered=true
+    start vendor.keymaster-4-0
+    start vendor.gatekeeper-1-0
+
+on property:hwservicemanager.ready=true && property:crypto.ready=1
+    start vendor.keymaster-4-0
+    start vendor.gatekeeper-1-0
+
+service keystore_auth /system/bin/keystore_auth
+    oneshot
+    user root
+    group root
+    seclabel u:r:recovery:s0
+
+service keystore /system/bin/keystore /tmp/misc/keystore
+    user root
+    group root drmrpc readproc log
+    disabled
+    seclabel u:r:recovery:s0
+
+# Android Hardware Services
+service vendor.keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    user root
+    group root drmrpc
+    disabled
+    seclabel u:r:recovery:s0
+    
+service vendor.gatekeeper-1-0 /system/bin/android.hardware.gatekeeper@1.0-service
+    interface android.hardware.gatekeeper@1.0::IGatekeeper default
+    user root
+    group root 5678
+    disabled
+    seclabel u:r:recovery:s0
