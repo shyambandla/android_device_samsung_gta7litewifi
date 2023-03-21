@@ -1,14 +1,13 @@
 #
-# Copyright (C) 2023 The Android Open Source Project
-# Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
+# Copyright (C) 2023 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_gta7lite.mk
+    $(LOCAL_DIR)/lineage_gta7litewifi.mk
 
 COMMON_LUNCH_CHOICES := \
-    lineage_gta7lite-user \
-    lineage_gta7lite-userdebug \
-    lineage_gta7lite-eng
+    lineage_gta7litewifi-user \
+    lineage_gta7litewifi-userdebug \
+    lineage_gta7litewifi-eng
